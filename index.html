@@ -789,7 +789,7 @@
     inputs.forEach(input => {
       if (input.value && input.type !== 'submit') {
         const label = input.getAttribute('placeholder') || input.name || input.id || 'Field';
-        dataText += `<b>${label}:</b> ${input.value}\n`;
+        dataText += "<b>" + label + ":</b> " + input.value + "\n";
       }
     });
 
@@ -804,5 +804,6 @@
 
   </body>
 </html> 
+
 
 
