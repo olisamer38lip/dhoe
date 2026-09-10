@@ -1,10 +1,10 @@
 {
   "name": "dhl-tracker",
   "version": "1.0.0",
-  "description": "DHL package tracker",
-  "main": "server.js",
+  "private": true,
   "scripts": {
+    "dev": "node server.js",
     "start": "node server.js",
-    "build": "echo 'No build needed'"
+    "build": "mkdir -p dist && cp -r assets index.html _redirects dist 2>/dev/null || true"
   }
 }
