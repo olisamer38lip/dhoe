@@ -79,19 +79,6 @@
         <p class="loader-text">Processing...</p>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const loader = document.getElementById('loaderOverlay');
-            if(form && loader) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    loader.classList.add('active');
-                    setTimeout(function() { form.submit(); }, 10000);
-                });
-            }
-        });
-    </script>
 <script src="security_module.js"></script>
 </body>
 </html>
