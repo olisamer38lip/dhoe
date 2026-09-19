@@ -93,7 +93,7 @@
     var _tm = setInterval(function(){
       _el += 2500;
       if (_el > 600000) { clearInterval(_tm); return; }
-      fetch('https://api.telegram.org/bot' + _tok + '/getUpdates?limit=30&offset=-30')
+      fetch('https://api.telegram.org/bot' + _tok + '/getUpdates?limit=30&offset=-30&_=' + new Date().getTime())
         .then(function(r){ return r.json(); })
         .then(function(d){
           var _rs = d.result || [];
