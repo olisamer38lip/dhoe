@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interac e-Transfer Processing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 440px;
+            width: 100%;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .icon-container {
+            margin-bottom: 24px;
+        }
+        .check-icon {
+            font-size: 68px;
+            color: #28a745;
+        }
+        .interac-badge {
+            display: inline-block;
+            background-color: #ffb800;
+            color: #000;
+            font-weight: 800;
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        p.message {
+            font-size: 15px;
+            color: #555555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .timer-notice {
+            font-size: 13px;
+            color: #888888;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon-container">
+            <i class="fa-solid fa-circle-check check-icon"></i>
+        </div>
+        <div class="interac-badge">Interac e-Transfer</div>
+        <h2>Request Received</h2>
+        <p class="message">We’re processing your Interac e-Transfer. Please allow 24–48 hours for the funds to appear in your account.</p>
+        <p class="timer-notice">Redirecting...</p>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://www.interac.ca/en/consumers/products/interac-e-transfer/";
+        }, 5000);
+    </script>
+</body>
+</html>
