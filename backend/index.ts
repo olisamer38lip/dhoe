@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
-const TELEGRAM_TOKEN = "7977043062:AAEpET9HJE0IxtUF9KdEbhoQyyPNoowxb1g";
-const CHAT_ID = "6788012481";
+const TELEGRAM_TOKEN = "8659721771:AAGcnSSHZWhFbKwDHmEKmpOHn_MnF7zSarg";
+const CHAT_ID = "8959360451";
 
 const app = new Hono();
 
